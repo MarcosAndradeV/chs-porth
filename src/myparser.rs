@@ -40,7 +40,7 @@ pub enum Intrinsic {
     CastBool,
     CastAddr,
     Argc,
-    ARgv,
+    Argv,
     Envp,
     Syscall0,
     Syscall1,
@@ -120,7 +120,7 @@ impl Parser {
             if let Ok(token) = self.require_valid() {
                 match token.kind {
                     TokenKind::Keyword if token.val() == "proc" => self.parse_proc()?,
-                    _ => todo!()
+                    _ => todo!(),
                 }
             } else {
                 break;
