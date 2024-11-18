@@ -19,7 +19,7 @@ fn main() -> Result<(), ()> {
                     eprintln!("ERROR: No file provioded");
                     usage(&program);
                 }
-                    break;
+                break;
             }
             "lex" => {
                 if let Some(file_path) = args.next() {
@@ -34,7 +34,11 @@ fn main() -> Result<(), ()> {
                 usage(&program);
                 break;
             }
-            _ => todo!(),
+            _ => {
+                eprintln!("ERROR: Invalid command");
+                usage(&program);
+                break;
+            }
         }
     }
     Ok(())
@@ -57,8 +61,9 @@ fn lex(file_path: String) -> Result<(), ()> {
 fn com(file_path: String) -> Result<(), ()> {
     let source = fs::read_to_string(Path::new(&file_path))
         .map_err(|err| eprintln!("ERROR: Cannot open {} {}", file_path, err))?;
-    let ops = Parser::new(Lexer::new(file_path, source)).parse()?;
-    println!("{:#?}", ops);
+    let program = Parser::new(Lexer::new(file_path.clone(), source)).parse()?;
+    println!("{:#?}", program);
+
     Ok(())
 }
 

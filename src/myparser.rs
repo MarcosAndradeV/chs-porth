@@ -100,22 +100,27 @@ pub enum TopLevel {
     Proc(Proc),
 }
 
+#[derive(Debug, Default, Clone)]
+pub struct Program {
+    pub tpls: Vec<TopLevel>,
+}
+
 pub struct Parser {
     lex: Lexer,
     peeked: Option<Token>,
-    tpls: Vec<TopLevel>,
+    program: Program,
 }
 
 impl Parser {
     pub fn new(lex: Lexer) -> Parser {
         Parser {
-            tpls: vec![],
+            program: Program::default(),
             lex,
             peeked: None,
         }
     }
 
-    pub fn parse(&mut self) -> Result<Vec<TopLevel>, ()> {
+    pub fn parse(&mut self) -> Result<Program, ()> {
         loop {
             if let Ok(token) = self.require_valid() {
                 match token.kind {
@@ -126,7 +131,7 @@ impl Parser {
                 break;
             }
         }
-        Ok(self.tpls.clone())
+        Ok(self.program.clone())
     }
 
     pub fn parse_proc(&mut self) -> Result<(), ()> {
@@ -203,7 +208,7 @@ impl Parser {
             }
         }
 
-        self.tpls.push(TopLevel::Proc(Proc {
+        self.program.tpls.push(TopLevel::Proc(Proc {
             name,
             ins,
             outs,
